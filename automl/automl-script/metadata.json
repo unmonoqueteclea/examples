@@ -7,22 +7,22 @@
   "imports":["../automl-library"],
   "inputs":[
     {
-      "name": "train-dataset",
-      "type": "dataset-id",
+      "name": "train-source",
+      "type": "source-id",
       "default": "",
-      "description": "Train dataset id (e.g. dataset/5d272205eba31d61920005cd)"
+      "description": "Initial source id (it will be splitted for train/evaluation)"
     },
     {
-      "name": "validation-dataset",
-      "type": "dataset-id",
+      "name": "test-source",
+      "type": "source-id",
       "default": "",
-      "description": "Validation dataset id (e.g. dataset/5d272205eba31d61920005cd)"
+      "description": "Test source id. To use AutoML with new production data."
     },
     {
-      "name": "test-dataset",
-      "type": "dataset-id",
-      "default": "",
-      "description": "Test dataset id (e.g. dataset/5d272205eba31d61920005cd)"
+      "name": "objective-name",
+      "type": "string",
+      "default": "Car+1_has_errors",
+      "description": "Objective field name"
     },
     {
       "name": "automl-execution",
@@ -34,7 +34,7 @@
       "name": "configuration-params",
       "type": "map",
       "default": {"excluded-fields": [],
-                  "excluded-models": [],
+                  "excluded-models": ["pca", "topicmodel"],
                   "pca-variance-threshold": 1,
                   "max-rules": 20},
       "description": "Execution configuration parameters. They will be overwritten if automl-execution is given. See README for more information"

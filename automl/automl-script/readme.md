@@ -26,16 +26,14 @@ automatically done:
 
 The **inputs** for the script are:
 
-* `train-dataset`: (dataset-id) Dataset id for the train dataset
-  (e.g. dataset/5d272205eba31d61920005cd). If no train dataset is
-  provided, the script will expect an `automl-execution` to be
-  provided and will use its models as starting point.
-* `validation-dataset`: (dataset-id) Dataset id for the validation dataset
-  (e.g. dataset/5d272205eba31d61920005cd). If empty, no
-  output-evalution is returned.
-* `test-dataset`: (dataset-id) Dataset id for the test dataset
-  (e.g. dataset/7j272205eba31d61920005vf). If empty, no output-dataset
-  is returned.
+* `train-source`: (source-id) Initial source id (it will be splitted
+  for train/evaluation) If no train source is provided, the script
+  will expect an `automl-execution` to be provided and will use its
+  models as starting point.
+* `test-source`: (source-id) Test source id. To use AutoML with new
+  production data. If empty, no output-dataset is returned.
+* `objective-name`: (string) Objective field name. `Car+1_has_errors`
+  by default
 * `automl-exection`: (execution-id) Previous execution of this script, to
   reuse created executions and models,
   e.g. execution/5d272205eba31d61920005cd. Either `train-dataset` or
@@ -84,28 +82,25 @@ The **outputs** for the script are:
 ## Usage
 There are two different ways of using this script:
 
-### From a train and a test dataset (and an optional validation dataset)
+### From a train (and optionally test) source
 In this case, the expected inputs for the script are the
-`train-dataset` and the `test-dataset`, with no `autml-execution`
-input.  The objective field used in the script will be the one
-associated to the datasets used, so remember to choose them previously
-in both the training and validation datasets.
+`train-source`, the `objective-name` and (optionally) the
+`test-source`, with no `autml-execution` input.
 
 The script will run the fully **automated Machine Learning pipeline**
 and it will return, at the end of the process, the **output-dataset**
 with the final predictions for the test dataset using a `Fusion` with
 the best models from the created `OptiML`.
 
-If a validation dataset is given, the script will also return an
-`evaluation` of the final `Fusion` model with the
-`validation-dataset`.
+The script will also return an `evaluation` of the final `Fusion`
+model with a `validation-dataset` obtained from the train dataset.
 
-### From a test dataset and a previous execution id (and an optional validation dataset)
+### From a test source and a previous execution id
 If we want to predict new data using the same models created by a
 previously executed `automl` script, you can use the `automl-execution`
-parameter (no `train-dataset` parameter needed) associated to that
-previous execution and provide the test dataset ID in the
-`test-dataset` parameter.
+parameter (no `train-source` parameter needed) associated to that
+previous execution and provide the test source ID in the
+`test-source` parameter.
 
 In this case, some steps of the process will be bypassed. The script
 won't generate neither a new `OptiML`, unsupervised model nor a
