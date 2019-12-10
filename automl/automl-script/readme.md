@@ -60,6 +60,8 @@ The **inputs** for the script are:
     than this value if there aren't enough rules in the created
     association discovery models or if the same rules appear on more
     than one association discovery model.
+  * `balance-objective`: (boolean) Whether to balance classes
+    proportionally to their category counts or not. True by default
 
 **WARNING** To avoid confusion, `configuration-params` are always
 overwritten by the corresponding input in `automl-execution` if this

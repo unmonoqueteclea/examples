@@ -96,7 +96,8 @@
 ;; Checks that all the needed params are in the configuration
 (define (check-configuration-params config)
   (let (correct #["excluded-fields" "excluded-models"
-                  "pca-variance-threshold" "max-rules"]
+                  "pca-variance-threshold" "max-rules"
+                  "balance-objective"]
         dif (difference correct (set* (keys (or config {})))))
     (when (not (empty? dif))
       (raise (str "Can't find the following parameters in the "
@@ -390,12 +391,13 @@
                                (not (= obj-id k))))
               (keys fields)))))
 
-(define (_random-forest dataset-id obj seed input-fields)
+(define (_random-forest dataset-id obj seed input-fields bal-obj)
   (create-and-wait-ensemble {"dataset" dataset-id
+                             "balance_objective" bal-obj
                              "objective_field" obj
                              "randomize" true
                              "random_candidate_ratio" 0.33
-                             "sample_rate" 0.8
+                             "sample_rate" 1
                              "seed" seed
                              "input_fields" input-fields
                              "ensemble_sample" {"rate" 1
@@ -434,7 +436,8 @@
 
 ;; Applies recursive feature elimination to obtain the most important
 ;; fields from a dataset, evaluating each iteration with the test-ds-id
-(define (recursive-feature-elimination ds-id nfeatures obj-id test-ds-id metric)
+(define (recursive-feature-elimination ds-id nfeatures obj-id
+                                       test-ds-id metric bal-obj)
   (let (do-evaluation (= (resource-type test-ds-id) "dataset")
         [obj-id otype] (_get-objective ds-id obj-id)
         fields (resource-fields ds-id)
@@ -454,7 +457,7 @@
 			  " fields -------")
               seed "BigML-RFE"
               ;; Create random forest and obtain its importances
-              rf-id (_random-forest ds-id obj-id seed selected)
+              rf-id (_random-forest ds-id obj-id seed selected bal-obj)
               imps ((fetch rf-id) "importance")
 	      ;; Check least important fields
 	      removed-fields (_check-no-imp imps selected)

@@ -36,7 +36,8 @@
       "default": {"excluded-fields": [],
                   "excluded-models": ["pca", "topicmodel"],
                   "pca-variance-threshold": 1,
-                  "max-rules": 20},
+                  "max-rules": 20,
+                  "balance-objective": true},
       "description": "Execution configuration parameters. They will be overwritten if automl-execution is given. See README for more information"
     }
   ],
